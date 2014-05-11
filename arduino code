@@ -1,0 +1,56 @@
+const int sensorPin = 0;
+const int ledPin = 9;
+int lightLevel, high = 0, low = 1023;
+
+
+// include the library code:
+#include <LiquidCrystal.h>
+
+// initialize the library with the numbers of the interface pins
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+  
+void setup()
+{
+   pinMode(ledPin, OUTPUT);
+
+  lcd.clear(); 
+  lcd.begin(16, 2);
+  lcd.setCursor(0,0); 
+  lcd.print("Bees going out"); 
+}
+void loop()
+{
+  lightLevel = analogRead(sensorPin);
+manualTune();
+analogWrite(ledPin, lightLevel);
+
+
+  int val = analogRead(5);
+  lcd.setCursor(0, 1);  
+  lcd.print(val);              
+
+  delay(500);
+}
+
+void manualTune()
+{
+   lightLevel = map(lightLevel, 400,800 , 0, 255);
+  lightLevel = constrain(lightLevel, 0, 225);
+  } 
+
+
+void autoTune()
+{
+if (lightLevel < low)
+  {
+    low = lightLevel;
+  }
+  if (lightLevel > high)
+  {
+    high = lightLevel;
+  }
+  lightLevel = map(lightLevel, low+30, high-30, 0, 255);
+  lightLevel = constrain(lightLevel, 0, 255);
+  }
+
